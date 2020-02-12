@@ -3,12 +3,17 @@ package com.example.taskmaster;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "mnf.main";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +52,41 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
+    }
+    //Intent activity for setting
+    public void whenSettingsButtonIsPressed(View v){
+        Intent settingsPage = new Intent(this, SettingsActivity.class);
+        MainActivity.this.startActivity(settingsPage);
+
+    }
+    @Override
+    protected void onStart(){
+        super.onStart();
+        Log.i(TAG, "started");
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        Log.i(TAG, "resumed");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String enteredUsername = sharedPreferences.getString("userName", "default");
+        TextView textView = findViewById(R.id.textView7);
+//        String settingsUsername = textView.getText().toString();
+        textView.setText(enteredUsername);
+        textView.setVisibility(View.VISIBLE);
+//        if(enteredUsername.equals("userName"))
+
+    }
+
+//    @Override
+//    protected void onPaused(){
+//        super.onPause();
+//        Log.i(TAG, "paused");
+//    }
+
 }
+
+
