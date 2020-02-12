@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,14 +25,6 @@ public class MainActivity extends AppCompatActivity {
         addTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-//                Intent addMoreTask = new Intent();
-//                TextView textView = findViewById(R.id.button);
-//                String addTaskText = textView.getText().toString();
-//
-//                addMoreTask.putExtra(Intent.EXTRA_TEXT, addTaskText);
-//                addMoreTask.setType("text/plain");
-//                startActivity(Intent.createChooser(addMoreTask, "Add Task"));
 
                 //Intent activity for AddTask button
                 Intent goToAddTask = new Intent(MainActivity.this, AddTask.class);
@@ -50,6 +43,43 @@ public class MainActivity extends AppCompatActivity {
                 Intent goToAllTasks = new Intent(MainActivity.this, AllTakss.class);
                 MainActivity.this.startActivity(goToAllTasks);
 
+            }
+        });
+
+        Button codingButton = findViewById(R.id.button9);
+        codingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Intent activity for Coding
+                Intent goToCodingTask = new Intent(MainActivity.this, TaskDetailActivity.class);
+                goToCodingTask.putExtra("buttonName", "Coding");
+                MainActivity.this.startActivity(goToCodingTask);
+            }
+        });
+
+        Button cookingButton = findViewById(R.id.button8);
+        cookingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Intent activity for cooking
+                Intent goToCookingTask = new Intent(MainActivity.this, TaskDetailActivity.class);
+//                Button cookingButton = findViewById(R.id.button8);
+                goToCookingTask.putExtra("buttonName", "Cooking" );
+                MainActivity.this.startActivity(goToCookingTask);
+            }
+        });
+
+        Button soccerButton = findViewById(R.id.button7);
+        soccerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Intent activity for soccer
+                Intent goToSoccerTask = new Intent(MainActivity.this, TaskDetailActivity.class);
+                goToSoccerTask.putExtra("buttonName", "Soccer" );
+                MainActivity.this.startActivity(goToSoccerTask);
             }
         });
 
