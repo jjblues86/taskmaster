@@ -6,7 +6,7 @@
 
 ## Screenshot
 
-![screenshot](https://github.com/jjblues86/taskmaster/blob/master/screenshots/Screen%20Shot%201398-11-22%20at%2012.34.56%20PM.png)
+![screenshot](https://github.com/jjblues86/taskmaster/blob/master/screenshots/Screen%20Shot%201398-11-23%20at%2012.51.51%20PM.png)
 
 ## Technology
 - Android Studio
