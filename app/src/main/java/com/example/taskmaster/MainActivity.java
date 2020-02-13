@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "mnf.main";
+    private static final String TAG = "jj.main";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,45 +46,47 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button codingButton = findViewById(R.id.button9);
-        codingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //Intent activity for Coding
-                Intent goToCodingTask = new Intent(MainActivity.this, TaskDetailActivity.class);
-                goToCodingTask.putExtra("buttonName", "Coding");
-                MainActivity.this.startActivity(goToCodingTask);
-            }
-        });
-
-        Button cookingButton = findViewById(R.id.button8);
-        cookingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //Intent activity for cooking
-                Intent goToCookingTask = new Intent(MainActivity.this, TaskDetailActivity.class);
-//                Button cookingButton = findViewById(R.id.button8);
-                goToCookingTask.putExtra("buttonName", "Cooking" );
-                MainActivity.this.startActivity(goToCookingTask);
-            }
-        });
-
-        Button soccerButton = findViewById(R.id.button7);
-        soccerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //Intent activity for soccer
-                Intent goToSoccerTask = new Intent(MainActivity.this, TaskDetailActivity.class);
-                goToSoccerTask.putExtra("buttonName", "Soccer" );
-                MainActivity.this.startActivity(goToSoccerTask);
-            }
-        });
+//        Button codingButton = findViewById(R.id.button9);
+//        codingButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                //Intent activity for Coding
+//                Intent goToCodingTask = new Intent(MainActivity.this, TaskDetailActivity.class);
+//                goToCodingTask.putExtra("buttonName", "Coding");
+//                MainActivity.this.startActivity(goToCodingTask);
+//            }
+//        });
+//
+//        Button cookingButton = findViewById(R.id.button8);
+//        cookingButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                //Intent activity for cooking
+//                Intent goToCookingTask = new Intent(MainActivity.this, TaskDetailActivity.class);
+////                Button cookingButton = findViewById(R.id.button8);
+//                goToCookingTask.putExtra("buttonName", "Cooking" );
+//                MainActivity.this.startActivity(goToCookingTask);
+//            }
+//        });
+//
+//        Button soccerButton = findViewById(R.id.button7);
+//        soccerButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                //Intent activity for soccer
+//                Intent goToSoccerTask = new Intent(MainActivity.this, TaskDetailActivity.class);
+//                goToSoccerTask.putExtra("buttonName", "Soccer" );
+//                MainActivity.this.startActivity(goToSoccerTask);
+//            }
+//        });
 
 
     }
+
+
     //Intent activity for setting
     public void whenSettingsButtonIsPressed(View v){
         Intent settingsPage = new Intent(this, SettingsActivity.class);

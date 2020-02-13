@@ -12,10 +12,10 @@ public class TaskDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_detail);
 
-        String buttonClicked = getIntent().getStringExtra("buttonName");
+        String textClicked = getIntent().getStringExtra("mNamedView");
 
         TextView buttonClickedTextView = findViewById(R.id.textView3);
-        buttonClickedTextView.setText(buttonClicked);
+        buttonClickedTextView.setText(textClicked);
 
     }
 }
