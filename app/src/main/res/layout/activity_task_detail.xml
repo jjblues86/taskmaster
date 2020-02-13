@@ -23,6 +23,7 @@
         android:id="@+id/editText6"
         android:layout_width="333dp"
         android:layout_height="467dp"
+        android:layout_marginTop="397dp"
         android:layout_marginBottom="48dp"
         android:ems="10"
         android:gravity="start|top"
@@ -31,5 +32,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.408"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 </androidx.constraintlayout.widget.ConstraintLayout>

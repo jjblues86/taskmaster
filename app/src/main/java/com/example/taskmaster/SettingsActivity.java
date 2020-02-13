@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    static final String TAG = "mnf.main";
+    static final String TAG = "jj.main";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
