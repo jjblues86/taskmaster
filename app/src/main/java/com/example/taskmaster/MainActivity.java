@@ -1,6 +1,9 @@
 package com.example.taskmaster;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,14 +15,34 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "jj.main";
+    private List<Task> tasks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        List<Task> tasks;
+        MyDatabase myDatabase;
+
+
+
+        myDatabase = Room.databaseBuilder(getApplicationContext(), MyDatabase.class, "task_items").allowMainThreadQueries().build();
+
+        this.tasks = myDatabase.taskDao().getAll();
+        for (Task item : tasks){
+            Log.i(TAG, item.body + item.title + item.state);
+        }
+
+        RecyclerView recyclerView = findViewById(R.id.fragment2);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(this.tasks, null));
+
 
         Button addTask = findViewById(R.id.button);
         addTask.setOnClickListener(new View.OnClickListener() {
@@ -29,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
                 //Intent activity for AddTask button
                 Intent goToAddTask = new Intent(MainActivity.this, AddTask.class);
                 MainActivity.this.startActivity(goToAddTask);
-
             }
         });
 
@@ -91,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
     public void whenSettingsButtonIsPressed(View v){
         Intent settingsPage = new Intent(this, SettingsActivity.class);
         MainActivity.this.startActivity(settingsPage);
-
     }
     @Override
     protected void onStart(){
@@ -110,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
         textView.setText(enteredUsername);
         textView.setVisibility(View.VISIBLE);
 //        if(enteredUsername.equals("userName"))
-
     }
 
 //    @Override

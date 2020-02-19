@@ -22,6 +22,14 @@
 - Create a Task class. A Task should have a title, a body, and a state. The state should be one of “new”, “assigned”, “in progress”, or “complete”.
 - Create a ViewAdapter class that displays data from a list of Tasks.
 In your MainActivity, create at least three hardcoded Task instances and use those to populate your RecyclerView/ViewAdapter.
+- Task Model and Room
+  Following the directions provided in the Android documentation, set up Room in your application, and modify your Task class to be an Entity.
+- Add Task Form
+  Modify your Add Task form to save the data entered in as a Task in your local database.
+- Homepage
+  Refactor your homepage’s RecyclerView to display all Task entities in your database.
+- Detail Page
+  Ensure that the description and status of a tapped task are also displayed on the detail page, in addition to the title. (Note that you can accomplish this by passing along the entire Task entity, or by passing along only its ID in the intent.)
 
 ## To Run
 - Clone this repo

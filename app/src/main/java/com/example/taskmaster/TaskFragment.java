@@ -75,7 +75,7 @@ public class TaskFragment extends Fragment {
             List<Task> listOfTask = new ArrayList<>();
             listOfTask.add(new Task("Coding", "I love Java", "in progress"));
             listOfTask.add(new Task("Cooking", "I love Cooking", "in progress"));
-            listOfTask.add(new Task("Soccer", "I soccer practice", "in progress"));
+            listOfTask.add(new Task("Soccer", "I love soccer practice", "in progress"));
 
             recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(listOfTask, null));//creating the view adapter
         }

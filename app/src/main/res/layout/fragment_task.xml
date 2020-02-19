@@ -5,20 +5,20 @@
 
     <TextView
         android:id="@+id/taskName"
-        android:layout_width="45dp"
-        android:layout_height="145dp"
+        android:layout_width="94dp"
+        android:layout_height="39dp"
         android:layout_margin="@dimen/text_margin"
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <TextView
         android:id="@+id/body"
-        android:layout_width="48dp"
-        android:layout_height="150dp"
+        android:layout_width="94dp"
+        android:layout_height="42dp"
         android:layout_margin="@dimen/text_margin"
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <TextView
         android:id="@+id/state"
-        android:layout_width="51dp"
-        android:layout_height="166dp" />
+        android:layout_width="109dp"
+        android:layout_height="45dp" />
 </LinearLayout>
