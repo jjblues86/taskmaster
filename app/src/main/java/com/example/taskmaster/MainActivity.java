@@ -12,7 +12,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.List;
@@ -27,14 +26,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        List<Task> tasks;
-        MyDatabase myDatabase;
+        TaskDatabase taskDatabase;
 
 
 
-        myDatabase = Room.databaseBuilder(getApplicationContext(), MyDatabase.class, "task_items").allowMainThreadQueries().build();
+        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_items").allowMainThreadQueries().build();
 
-        this.tasks = myDatabase.taskDao().getAll();
+        this.tasks = taskDatabase.taskDao().getAll();
         for (Task item : tasks){
             Log.i(TAG, item.body + item.title + item.state);
         }
@@ -87,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 //
 //                //Intent activity for cooking
 //                Intent goToCookingTask = new Intent(MainActivity.this, TaskDetailActivity.class);
-////                Button cookingButton = findViewById(R.id.button8);
+//                Button cookingButton = findViewById(R.id.button8);
 //                goToCookingTask.putExtra("buttonName", "Cooking" );
 //                MainActivity.this.startActivity(goToCookingTask);
 //            }

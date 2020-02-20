@@ -50,8 +50,8 @@
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="0dp"
-        android:layout_height="43dp"
+        android:layout_width="324dp"
+        android:layout_height="81dp"
         android:layout_marginTop="80dp"
         android:onClick="whenSettingsButtonIsPressed"
         app:layout_constraintBottom_toBottomOf="parent"

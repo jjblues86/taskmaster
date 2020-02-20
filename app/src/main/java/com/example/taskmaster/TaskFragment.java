@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +28,16 @@ import java.util.List;
  */
 public class TaskFragment extends Fragment {
 
+    private static final String TAG = "jj.main";
+
+
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private List<Task> tasks;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -63,6 +70,9 @@ public class TaskFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_task_list, container, false);
 
+        TaskDatabase taskDatabase;
+
+
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -72,12 +82,19 @@ public class TaskFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            List<Task> listOfTask = new ArrayList<>();
-            listOfTask.add(new Task("Coding", "I love Java", "in progress"));
-            listOfTask.add(new Task("Cooking", "I love Cooking", "in progress"));
-            listOfTask.add(new Task("Soccer", "I love soccer practice", "in progress"));
+//            List<Task> listOfTask = new ArrayList<>();
+            taskDatabase = Room.databaseBuilder(getContext(), TaskDatabase.class, "task_items").allowMainThreadQueries().build();
+            this.tasks = taskDatabase.taskDao().getAll();
+            for (Task item : tasks){
+                Log.i(TAG, item.body + item.title + item.state);
+            }
 
-            recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(listOfTask, null));//creating the view adapter
+
+//            listOfTask.add(new Task("Coding", "I love Java", "In progress"));
+//            listOfTask.add(new Task("Cooking", "I love Cooking", "In progress"));
+//            listOfTask.add(new Task("Soccer", "I love soccer practice", "In progress"));
+
+            recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(tasks, mListener));//creating the view adapter
         }
         return view;
     }

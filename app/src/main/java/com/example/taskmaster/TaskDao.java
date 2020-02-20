@@ -17,7 +17,7 @@ public interface TaskDao {
     Task getOne(long id);
 
     @Insert
-     void saveTask(Task task);
+     public void saveTask(Task task);
 
 
 }

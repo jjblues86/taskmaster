@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.taskmaster.TaskFragment.OnListFragmentInteractionListener;
 import com.example.taskmaster.dummy.DummyContent.DummyItem;
@@ -57,12 +58,21 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
             public void onClick(View v) {
                 Context context = v.getContext();
 
-                Intent intent = new Intent(context,TaskDetailActivity.class);
-                intent.putExtra("mNamedView", holder.mNamedView.getText());
-                intent.putExtra("mBodyView", holder.mBodyView.getText());
-                intent.putExtra("mStateView", holder.mStateView.getText());
-                context.startActivity(intent);
-                TextView textView = (TextView) v.findViewById(taskName);
+            String alltasks = context.getClass().getName();
+                System.out.println("alltasks = " + alltasks);
+
+                if(alltasks.equals("com.example.taskmaster.MainActivity")) {
+                    Intent intent = new Intent(context, TaskDetailActivity.class);
+                    intent.putExtra("mNamedView", holder.mNamedView.getText());
+                    intent.putExtra("mBodyView", holder.mBodyView.getText());
+                    intent.putExtra("mStateView", holder.mStateView.getText());
+                    context.startActivity(intent);
+                    TextView textView = (TextView) v.findViewById(taskName);
+                } else if(alltasks.equals("com.example.taskmaster.AllTakss")){
+                    String output = holder.mNamedView.getText().toString();
+                    Toast toast = Toast.makeText(context, output, Toast.LENGTH_SHORT);
+                    toast.show();
+                }
 //                Log.d("LOGTAG", "clicked : name "+textView.getText().toString() );
                Log.i(TAG, "it was clicked");
             }
