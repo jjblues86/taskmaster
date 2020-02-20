@@ -1,20 +1,15 @@
 package com.example.taskmaster;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class AddTask extends AppCompatActivity {
 
@@ -23,11 +18,11 @@ public class AddTask extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
 
-        MyDatabase myDatabase;
+        TaskDatabase taskDatabase;
 
 
 
-        myDatabase = Room.databaseBuilder(getApplicationContext(), MyDatabase.class, "task_items").allowMainThreadQueries().build();
+        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_items").allowMainThreadQueries().build();
 
 
         Button addTask = findViewById(R.id.button3);
@@ -41,7 +36,7 @@ public class AddTask extends AppCompatActivity {
 
 
                 String tasksText = input.getText().toString();
-                String taskstext1 = input1.getText().toString();
+                String tasksText1 = input1.getText().toString();
 
 
                 //radio buttons
@@ -51,8 +46,8 @@ public class AddTask extends AppCompatActivity {
                 String tasksButtons = radioButton.getText().toString();
 
 
-                Task newTask = new Task(tasksText, taskstext1, tasksButtons);
-                myDatabase.taskDao().saveTask(newTask);
+                Task newTask = new Task(tasksText, tasksText1, tasksButtons);
+                taskDatabase.taskDao().saveTask(newTask);
 
                 Intent takeMeBackToMainPage = new Intent(AddTask.this, MainActivity.class);
                 AddTask.this.startActivity(takeMeBackToMainPage);
