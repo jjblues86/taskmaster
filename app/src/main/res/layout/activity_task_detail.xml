@@ -11,13 +11,12 @@
         android:layout_width="98dp"
         android:layout_height="44dp"
         android:layout_marginStart="92dp"
+        android:layout_marginTop="48dp"
         android:text="Task Detail"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/textView5"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.141"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.055" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editText6"
@@ -49,12 +48,14 @@
 
     <TextView
         android:id="@+id/textView8"
-        android:layout_width="84dp"
-        android:layout_height="27dp"
+        android:layout_width="85dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="63dp"
         android:layout_marginBottom="41dp"
         android:text="Body"
         app:layout_constraintBottom_toTopOf="@+id/textView5"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.219"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.23"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,28 +30,35 @@ public class AddTask extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //text inputs
-                EditText input = findViewById(R.id.editText);
-                EditText input1 = findViewById(R.id.editText3);
+//                //text inputs
+//                EditText input = findViewById(R.id.editText);
+//                EditText input1 = findViewById(R.id.editText3);
+//
+//
+//                String tasksText = input.getText().toString();
+//                String tasksText1 = input1.getText().toString();
+//
+//
+//                //radio buttons
+//                RadioGroup radioButtons = findViewById(R.id.radioGroup);
+//                int selectedId = radioButtons.getCheckedRadioButtonId();
+//                RadioButton radioButton = findViewById(selectedId);
+//                String tasksButtons = radioButton.getText().toString();
+//
+//
+//                Task newTask = new Task(tasksText, tasksText1, tasksButtons);
+//                taskDatabase.taskDao().saveTask(newTask);
+//
+//                Intent takeMeBackToMainPage = new Intent(AddTask.this, MainActivity.class);
+//                AddTask.this.startActivity(takeMeBackToMainPage);
 
 
-                String tasksText = input.getText().toString();
-                String tasksText1 = input1.getText().toString();
 
-
-                //radio buttons
-                RadioGroup radioButtons = findViewById(R.id.radioGroup);
-                int selectedId = radioButtons.getCheckedRadioButtonId();
-                RadioButton radioButton = findViewById(selectedId);
-                String tasksButtons = radioButton.getText().toString();
-
-
-                Task newTask = new Task(tasksText, tasksText1, tasksButtons);
-                taskDatabase.taskDao().saveTask(newTask);
-
-                Intent takeMeBackToMainPage = new Intent(AddTask.this, MainActivity.class);
-                AddTask.this.startActivity(takeMeBackToMainPage);
-
+                Intent addTaskIntent = new Intent(AddTask.this, MainActivity.class);
+                addTaskIntent.putExtra("taskTitle", "Soccer");
+                addTaskIntent.putExtra("taskBody", "Mattaus sucks at soccer");
+                addTaskIntent.putExtra("taskState", "Complete");
+                startActivity(addTaskIntent);
 //
 //                Context showConfirmation = getApplicationContext();
 //                CharSequence confirmationText = "Submitted";
