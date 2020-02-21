@@ -30,7 +30,15 @@ In your MainActivity, create at least three hardcoded Task instances and use tho
   Refactor your homepage’s RecyclerView to display all Task entities in your database.
 - Detail Page
   Ensure that the description and status of a tapped task are also displayed on the detail page, in addition to the title. (Note that you can accomplish this by passing along the entire Task entity, or by passing along only its ID in the intent.)
-- Today, your app will add a new activity for all tasks with a Recycler View showing all tasks. These tasks must be clickable. When clicked on, trigger a Toast that displays details about the task.
+- Today, your app will add a new activity for all tasks with a Recycler View showing all tasks. These tasks must be clickable. - When clicked on, trigger a Toast that displays details about the task.
+Tasks Are Cloudy
+- Using the amplify add api command, create a Task resource that replicates our existing Task schema. Update all references to the Task data to instead use AWS Amplify to access your data in DynamoDB instead of in Room.
+
+- Add Task Form
+- Modify your Add Task form to save the data entered in as a Task to DynamoDB.
+
+- Homepage
+- Refactor your homepage’s RecyclerView to display all Task entities in DynamoDB.
 
 ## To Run
 - Clone this repo
