@@ -36,7 +36,7 @@ public class TaskFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    private List<Task> tasks;
+//    private List<Task> tasks;
 
 
     /**
@@ -68,37 +68,50 @@ public class TaskFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_task_list, container, false);
-
-        TaskDatabase taskDatabase;
-
-
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-//            List<Task> listOfTask = new ArrayList<>();
-            taskDatabase = Room.databaseBuilder(getContext(), TaskDatabase.class, "task_items").allowMainThreadQueries().build();
-            this.tasks = taskDatabase.taskDao().getAll();
-            for (Task item : tasks){
-                Log.i(TAG, item.body + item.title + item.state);
-            }
-
-
-//            listOfTask.add(new Task("Coding", "I love Java", "In progress"));
-//            listOfTask.add(new Task("Cooking", "I love Cooking", "In progress"));
-//            listOfTask.add(new Task("Soccer", "I love soccer practice", "In progress"));
-
-            recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(tasks, mListener));//creating the view adapter
-        }
-        return view;
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_task_list, container, false);
     }
 
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                             Bundle savedInstanceState) {
+//        View view = inflater.inflate(R.layout.fragment_task_list, container, false);
+//
+////        TaskDatabase taskDatabase;
+//
+//
+//        // Set the adapter
+//        if (view instanceof RecyclerView) {
+//            Context context = view.getContext();
+//            RecyclerView recyclerView = (RecyclerView) view;
+//            if (mColumnCount <= 1) {
+//                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+//            } else {
+//                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+//            }
+////            List<Task> listOfTask = new ArrayList<>();
+////            taskDatabase = Room.databaseBuilder(getContext(), TaskDatabase.class, "task_items").allowMainThreadQueries().build();
+////            this.tasks = taskDatabase.taskDao().getAll();
+////            for (Task item : tasks){
+////                Log.i(TAG, item.body + item.title + item.state);
+////            }
+//
+//
+////            listOfTask.add(new Task("Coding", "I love Java", "In progress"));
+////            listOfTask.add(new Task("Cooking", "I love Cooking", "In progress"));
+////            listOfTask.add(new Task("Soccer", "I love soccer practice", "In progress"));
+//
+//            recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(context, mListener));//creating the view adapter
+//        }
+//        return view;
+//    }
+
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Task uri) {
+        if (mListener != null) {
+            mListener.onListFragmentInteraction(uri);
+        }
+    }
 
 
 
@@ -131,6 +144,6 @@ public class TaskFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(Task uri);
     }
 }
