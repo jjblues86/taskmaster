@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.amazonaws.amplify.generated.graphql.CreateTaskMutation;
 import com.amazonaws.amplify.generated.graphql.ListTasksQuery;
 import com.amazonaws.mobile.config.AWSConfiguration;
@@ -24,12 +23,9 @@ import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers;
 import com.apollographql.apollo.GraphQLCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.Nonnull;
-
 import type.CreateTaskInput;
 
 public class MainActivity extends AppCompatActivity {
@@ -70,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(this.tasks, null));
 
-        getTaskItems();
+//        getTaskItems();
 
 
 
@@ -117,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         String settingsUsername = textView.getText().toString();
         textView.setText(enteredUsername);
         textView.setVisibility(View.VISIBLE);
-        runTaskMutation("title", "body", "new");
+//        runTaskMutation("title", "body", "new");
         if(enteredUsername.equals("userName"))
         if(getIntent().getStringExtra("taskTitle") != null)
         {
@@ -157,8 +153,10 @@ public class MainActivity extends AppCompatActivity {
     //this method enables me to query data stored in dynamodb to render on my front page
     public void getTaskItems()
     {
+        Log.i(TAG, "Did we make it into getTaskItems");
+
         mAWSAppSyncClient.query(ListTasksQuery.builder().build())
-                .responseFetcher(AppSyncResponseFetchers.CACHE_AND_NETWORK)
+                .responseFetcher(AppSyncResponseFetchers.NETWORK_ONLY)
                 .enqueue(tasksCallback);
 
     }

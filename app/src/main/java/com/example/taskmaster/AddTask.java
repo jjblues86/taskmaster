@@ -61,8 +61,7 @@ public class AddTask extends AppCompatActivity {
 
                 String tasksText = input.getText().toString();
                 String tasksText1 = input1.getText().toString();
-//
-//
+
 //                //radio buttons
                 RadioGroup radioButtons = findViewById(R.id.radioGroup);
                 int selectedId = radioButtons.getCheckedRadioButtonId();
@@ -72,8 +71,6 @@ public class AddTask extends AppCompatActivity {
                 Task newTask = new Task(tasksText, tasksText1, tasksButtons);
                 taskDatabase.taskDao().saveTask(newTask);
 
-                Intent takeMeBackToMainPage = new Intent(AddTask.this, MainActivity.class);
-                AddTask.this.startActivity(takeMeBackToMainPage);
                 runTaskMutation(tasksText,tasksText1,tasksButtons);
             }
 
@@ -105,7 +102,8 @@ public class AddTask extends AppCompatActivity {
         public void onResponse(@Nonnull Response<CreateTaskMutation.Data> response)
         {
             Log.i(TAG, "Added Task");
-//            getTaskItems();
+            Intent takeMeBackToMainPage = new Intent(AddTask.this, MainActivity.class);
+            AddTask.this.startActivity(takeMeBackToMainPage);
         }
 
         @Override
@@ -118,7 +116,6 @@ public class AddTask extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
-//        getTaskItems();
         Log.i(TAG, "started");
     }
 
