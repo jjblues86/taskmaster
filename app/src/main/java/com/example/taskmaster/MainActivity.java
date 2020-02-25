@@ -17,6 +17,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.amazonaws.amplify.generated.graphql.CreateTaskMutation;
 import com.amazonaws.amplify.generated.graphql.ListTasksQuery;
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.client.Callback;
+import com.amazonaws.mobile.client.SignOutOptions;
+import com.amazonaws.mobile.client.UserState;
+import com.amazonaws.mobile.client.UserStateDetails;
 import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient;
 import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers;
@@ -47,9 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 .context(getApplicationContext())
                 .awsConfiguration(new AWSConfiguration(getApplicationContext()))
                 .build();
-
         getTaskItems();
-
 
         //local database
         taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_items").allowMainThreadQueries().build();
@@ -66,22 +69,15 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(this.tasks, null));
 
-//        getTaskItems();
-
-
-
         Button addTask = findViewById(R.id.button);
         addTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 //                Intent activity for AddTask button
                 Intent goToAddTask = new Intent(MainActivity.this, AddTask.class);
                 MainActivity.this.startActivity(goToAddTask);
-
             }
     });
-
         //Intent activity for AllTasks button
         Button addAllTasks = findViewById(R.id.button2);
         addAllTasks.setOnClickListener(new View.OnClickListener() {
@@ -91,30 +87,100 @@ public class MainActivity extends AppCompatActivity {
                 //Intent activity for AddTask button
                 Intent goToAllTasks = new Intent(MainActivity.this, AllTakss.class);
                 MainActivity.this.startActivity(goToAllTasks);
-
             }
         });
+        //Button for signOut and method to reroute you back to the signup page
+        Button signOut = findViewById(R.id.signout);
+        signOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AWSMobileClient.getInstance().initialize(getApplicationContext(), new Callback<UserStateDetails>() {
+                            @Override
+                            public void onResult(UserStateDetails userStateDetails) {
+                                Log.i("INIT", "onResult: " + userStateDetails.getUserState());
+                                if(userStateDetails.getUserState().equals(UserState.SIGNED_OUT)){
+                                    // 'this' refers the the current active activity
+                                    AWSMobileClient.getInstance().showSignIn(MainActivity.this, new Callback<UserStateDetails>() {
+                                        @Override
+                                        public void onResult(UserStateDetails result) {
+                                            Log.d(TAG, "onResult: " + result.getUserState());
+                                        }
+                                        @Override
+                                        public void onError(Exception e) {
+                                            Log.e(TAG, "onError: ", e);
+                                        }
+                                    });
+                                }
+                            }
+                            @Override
+                            public void onError(Exception e) {
+                                Log.e("INIT", "Initialization error.", e);
+                            }
+                        });
+        }
+        });
+        AWSMobileClient.getInstance().initialize(getApplicationContext(), new Callback<UserStateDetails>() {
+                    @Override
+                    public void onResult(UserStateDetails userStateDetails) {
+                        Log.i("INIT", "onResult: " + userStateDetails.getUserState());
+                    }
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("INIT", "Initialization error.", e);
+                    }
+                });
+        AWSMobileClient.getInstance().initialize(getApplicationContext(), new Callback<UserStateDetails>() {
+                    @Override
+                    public void onResult(UserStateDetails userStateDetails) {
+                        Log.i("INIT", "onResult: " + userStateDetails.getUserState());
+                        if(userStateDetails.getUserState().equals(UserState.SIGNED_OUT)){
+                            // 'this' refers the the current active activity
+                            AWSMobileClient.getInstance().showSignIn(MainActivity.this, new Callback<UserStateDetails>() {
+                                @Override
+                                public void onResult(UserStateDetails result) {
+                                    Log.d(TAG, "onResult: " + result.getUserState());
+                                }
+                                @Override
+                                public void onError(Exception e) {
+                                    Log.e(TAG, "onError: ", e);
+                                }
+                            });
+                        }
+                    }
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("INIT", "Initialization error.", e);
+                    }
+                });
+        AWSMobileClient.getInstance().signOut(SignOutOptions.builder().signOutGlobally(true).build(), new Callback<Void>() {
+            @Override
+            public void onResult(final Void result) {
+                Log.d(TAG, "signed-out");
+
+            }
+            @Override
+            public void onError(Exception e) {
+                Log.e(TAG, "sign-out error", e);
+            }
+        });
+
+
     }
-
-
 //    //Intent activity for setting
     public void whenSettingsButtonIsPressed(View v){
         Intent settingsPage = new Intent(this, SettingsActivity.class);
         MainActivity.this.startActivity(settingsPage);
     }
-
     @Override
     protected void onResume(){
         super.onResume();
         Log.i(TAG, "resumed");
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String enteredUsername = sharedPreferences.getString("userName", "default");
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String enteredUsername =  AWSMobileClient.getInstance().getUsername();
         TextView textView = findViewById(R.id.textView7);
-        String settingsUsername = textView.getText().toString();
+//        String settingsUsername = textView.getText().toString();
         textView.setText(enteredUsername);
         textView.setVisibility(View.VISIBLE);
-//        runTaskMutation("title", "body", "new");
-        if(enteredUsername.equals("userName"))
         if(getIntent().getStringExtra("taskTitle") != null)
         {
             String addTaskIntentTitle = getIntent().getStringExtra("taskTitle");
@@ -123,7 +189,6 @@ public class MainActivity extends AppCompatActivity {
             runTaskMutation(addTaskIntentTitle, addTaskIntentBody, addTaskIntentState);
         }
     }
-
     public void runTaskMutation(String title, String body, String state){
         CreateTaskInput createTaskInput = CreateTaskInput.builder().
                 title(title).
@@ -134,7 +199,6 @@ public class MainActivity extends AppCompatActivity {
                 .enqueue(taskMutationCallback);//performs the callback when we want the data gets inserted
 
     }
-
     private GraphQLCall.Callback<CreateTaskMutation.Data> taskMutationCallback = new GraphQLCall.Callback<CreateTaskMutation.Data>() {
         @Override
         public void onResponse(@Nonnull Response<CreateTaskMutation.Data> response)
@@ -148,8 +212,6 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, e.toString());
         }
     };
-
-
     //this method enables me to query data stored in dynamodb to render on my front page
     public void getTaskItems()
     {
@@ -158,9 +220,7 @@ public class MainActivity extends AppCompatActivity {
         mAWSAppSyncClient.query(ListTasksQuery.builder().build())
                 .responseFetcher(AppSyncResponseFetchers.NETWORK_ONLY)
                 .enqueue(tasksCallback);
-
     }
-
     private GraphQLCall.Callback<ListTasksQuery.Data> tasksCallback = new GraphQLCall.Callback<ListTasksQuery.Data>() {
         @Override
         public void onResponse(@Nonnull Response<ListTasksQuery.Data> response)
@@ -183,7 +243,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 };
                 handler.obtainMessage().sendToTarget();
-
             }
         }
         @Override
@@ -191,7 +250,6 @@ public class MainActivity extends AppCompatActivity {
         {
             Log.e(TAG, e.toString());
             taskDatabase.taskDao().getAll();
-            // Toast.makeText(getApplicationContext(), "DynamoDB Query ERROR", Toast.LENGTH_SHORT).show();
         }
     };
 }
