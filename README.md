@@ -40,6 +40,12 @@ Tasks Are Cloudy
 - Homepage
 - Refactor your homepage’s RecyclerView to display all Task entities in DynamoDB.
 
+- User Login
+Add Cognito to your Amplify setup. Add in user login and sign up flows to your application, using Cognito’s pre-built UI as appropriate. Display the logged in user’s username somewhere relevant in your app.
+
+- User Logout
+Allow users to log out of your application.
+
 ## To Run
 - Clone this repo
 - run gradle build
