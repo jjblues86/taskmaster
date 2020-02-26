@@ -3,6 +3,7 @@ package com.example.taskmaster;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +27,8 @@ import type.CreateTaskInput;
 public class AddTask extends AppCompatActivity {
 
     private AWSAppSyncClient mAWSAppSyncClient;
+    private static final int OPEN_DOCUMENT_CODE = 2;
+    public Uri imageUri;
 
     private static final String TAG = "jj.main";
     private List<Task> tasks;
@@ -75,6 +78,28 @@ public class AddTask extends AppCompatActivity {
             }
 
         });
+
+        //upload photos
+        Button uploadButton = findViewById(R.id.uploadButton);
+        uploadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, OPEN_DOCUMENT_CODE);
+
+            }
+        });
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        if (requestCode == OPEN_DOCUMENT_CODE && resultCode == RESULT_OK) {
+            if (resultData != null) {
+                // this is the image selected by the user
+                Uri imageUri = resultData.getData();
+            }
+        }
     }
 
     @Override
