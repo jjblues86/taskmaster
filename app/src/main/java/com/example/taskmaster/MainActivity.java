@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -25,9 +26,19 @@ import com.amazonaws.mobile.client.UserStateDetails;
 import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient;
 import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferService;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.apollographql.apollo.GraphQLCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -89,36 +100,30 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(goToAllTasks);
             }
         });
+        //s3 transferservice
+        getApplicationContext().startService(new Intent(getApplicationContext(), TransferService.class));
+
         //Button for signOut and method to reroute you back to the signup page
         Button signOut = findViewById(R.id.signout);
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AWSMobileClient.getInstance().initialize(getApplicationContext(), new Callback<UserStateDetails>() {
-                            @Override
-                            public void onResult(UserStateDetails userStateDetails) {
-                                Log.i("INIT", "onResult: " + userStateDetails.getUserState());
-                                if(userStateDetails.getUserState().equals(UserState.SIGNED_OUT)){
-                                    // 'this' refers the the current active activity
-                                    AWSMobileClient.getInstance().showSignIn(MainActivity.this, new Callback<UserStateDetails>() {
-                                        @Override
-                                        public void onResult(UserStateDetails result) {
-                                            Log.d(TAG, "onResult: " + result.getUserState());
-                                        }
-                                        @Override
-                                        public void onError(Exception e) {
-                                            Log.e(TAG, "onError: ", e);
-                                        }
-                                    });
-                                }
-                            }
-                            @Override
-                            public void onError(Exception e) {
-                                Log.e("INIT", "Initialization error.", e);
-                            }
-                        });
-        }
-        });
+                AWSMobileClient.getInstance().signOut(SignOutOptions.builder().signOutGlobally(true).build(), new Callback<Void>() {
+                    @Override
+                    public void onResult(final Void result) {
+                        Log.d(TAG, "signingout");
+                        Intent signOutIntent = new Intent(MainActivity.this, MainActivity.class);
+                        MainActivity.this.startActivity(signOutIntent);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                    }
+                });
+            }
+    });
+
         AWSMobileClient.getInstance().initialize(getApplicationContext(), new Callback<UserStateDetails>() {
                     @Override
                     public void onResult(UserStateDetails userStateDetails) {
@@ -139,6 +144,12 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onResult(UserStateDetails result) {
                                     Log.d(TAG, "onResult: " + result.getUserState());
+
+                                    if(result.getUserState().equals(UserState.SIGNED_IN)){
+
+                                        uploadWithTransferUtility();
+                                    }
+
                                 }
                                 @Override
                                 public void onError(Exception e) {
@@ -152,17 +163,18 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("INIT", "Initialization error.", e);
                     }
                 });
-        AWSMobileClient.getInstance().signOut(SignOutOptions.builder().signOutGlobally(true).build(), new Callback<Void>() {
-            @Override
-            public void onResult(final Void result) {
-                Log.d(TAG, "signed-out");
 
-            }
-            @Override
-            public void onError(Exception e) {
-                Log.e(TAG, "sign-out error", e);
-            }
-        });
+//        AWSMobileClient.getInstance().signOut(SignOutOptions.builder().signOutGlobally(true).build(), new Callback<Void>() {
+//            @Override
+//            public void onResult(final Void result) {
+//                Log.d(TAG, "signed-out");
+//
+//            }
+//            @Override
+//            public void onError(Exception e) {
+//                Log.e(TAG, "sign-out error", e);
+//            }
+//        });
 
 
     }
@@ -252,6 +264,66 @@ public class MainActivity extends AppCompatActivity {
             taskDatabase.taskDao().getAll();
         }
     };
+
+    public void uploadWithTransferUtility() {
+
+        TransferUtility transferUtility =
+                TransferUtility.builder()
+                        .context(getApplicationContext())
+                        .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
+                        .s3Client(new AmazonS3Client(AWSMobileClient.getInstance()))
+                        .build();
+
+        File file = new File(getApplicationContext().getFilesDir(), "sample.txt");
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            writer.append("Howdy Jerome!");
+            writer.close();
+        }
+        catch(Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+
+        TransferObserver uploadObserver =
+                transferUtility.upload(
+                        "public/sample.txt",
+                        new File(getApplicationContext().getFilesDir(),"sample.txt"));
+
+        // Attach a listener to the observer to get state update and progress notifications
+        uploadObserver.setTransferListener(new TransferListener() {
+
+            @Override
+            public void onStateChanged(int id, TransferState state) {
+                if (TransferState.COMPLETED == state) {
+                    // Handle a completed upload.
+                }
+            }
+
+            @Override
+            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                int percentDone = (int)percentDonef;
+
+                Log.d(TAG, "ID:" + id + " bytesCurrent: " + bytesCurrent
+                        + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+            }
+
+            @Override
+            public void onError(int id, Exception ex) {
+                // Handle errors
+            }
+
+        });
+
+        // If you prefer to poll for the data, instead of attaching a
+        // listener, check for the state and progress in the observer.
+        if (TransferState.COMPLETED == uploadObserver.getState()) {
+            // Handle a completed upload.
+        }
+
+        Log.d(TAG, "Bytes Transferred: " + uploadObserver.getBytesTransferred());
+        Log.d(TAG, "Bytes Total: " + uploadObserver.getBytesTotal());
+    }
 }
 
 

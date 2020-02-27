@@ -26,6 +26,7 @@ android {
 apply plugin: 'com.amazonaws.appsync'
 
 dependencies {
+    implementation 'com.amazonaws:aws-android-sdk-s3:2.15.+'
     //For AWSMobileClient only:
     implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.15.+'
     implementation 'com.amazonaws:aws-android-sdk-auth-userpools:2.15.+'
@@ -50,6 +51,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     androidTestImplementation 'androidx.test:rules:1.2.0-beta01'
+    implementation 'com.google.android.material:material:1.0.0'
 
 
 }
