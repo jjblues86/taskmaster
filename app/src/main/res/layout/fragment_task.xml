@@ -21,4 +21,12 @@
         android:id="@+id/state"
         android:layout_width="109dp"
         android:layout_height="45dp" />
+
+    <TextView
+        android:id="@+id/textViewS3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="TextView"
+        android:visibility="invisible" />
 </LinearLayout>

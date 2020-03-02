@@ -8,6 +8,7 @@ mutation CreateTask(
     title
     body
     state
+    image
   }
 }
 mutation UpdateTask(
@@ -19,6 +20,7 @@ mutation UpdateTask(
     title
     body
     state
+    image
   }
 }
 mutation DeleteTask(
@@ -30,5 +32,6 @@ mutation DeleteTask(
     title
     body
     state
+    image
   }
 }

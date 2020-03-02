@@ -5,6 +5,7 @@ subscription OnCreateTask {
     title
     body
     state
+    image
   }
 }
 subscription OnUpdateTask {
@@ -13,6 +14,7 @@ subscription OnUpdateTask {
     title
     body
     state
+    image
   }
 }
 subscription OnDeleteTask {
@@ -21,5 +23,6 @@ subscription OnDeleteTask {
     title
     body
     state
+    image
   }
 }

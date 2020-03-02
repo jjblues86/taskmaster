@@ -1,12 +1,21 @@
 package com.example.taskmaster;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
+
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -26,6 +35,8 @@ import com.amazonaws.mobile.client.UserStateDetails;
 import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient;
 import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers;
+import com.amazonaws.mobileconnectors.pinpoint.PinpointConfiguration;
+import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferService;
@@ -35,6 +46,10 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.apollographql.apollo.GraphQLCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -46,8 +61,10 @@ import type.CreateTaskInput;
 public class MainActivity extends AppCompatActivity {
 
     private AWSAppSyncClient mAWSAppSyncClient;
+    static String CHANNEL_ID = "kay";
 
     private static final String TAG = "jj.main";
+    private static PinpointManager pinpointManager;
     List<Task> tasks;
     TaskDatabase taskDatabase;
 
@@ -63,6 +80,42 @@ public class MainActivity extends AppCompatActivity {
                 .awsConfiguration(new AWSConfiguration(getApplicationContext()))
                 .build();
         getTaskItems();
+        // Initialize PinpointManager
+        getPinpointManager(getApplicationContext());
+
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Channel";
+            String description = "description";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+
+
+        }
+
+        // Create an explicit intent for an Activity in your app
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        //creating notification
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle("Do not forget your meeting")
+                .setContentText("This is important")
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify((int)(Math.random() * 100.0), builder.build());
+
+
 
         //local database
         taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_items").allowMainThreadQueries().build();
@@ -70,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         this.tasks = new ArrayList<Task>();
 
 
-        this.tasks = taskDatabase.taskDao().getAll();
+        //this.tasks = taskDatabase.taskDao().getAll();
         for (Task item : tasks){
             Log.i(TAG, item.body + item.title + item.state);
         }
@@ -83,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         addTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent activity for AddTask button
+                //Intent activity for AddTask button
                 Intent goToAddTask = new Intent(MainActivity.this, AddTask.class);
                 MainActivity.this.startActivity(goToAddTask);
             }
@@ -99,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(goToAllTasks);
             }
         });
+
         //s3 transferservice
         getApplicationContext().startService(new Intent(getApplicationContext(), TransferService.class));
 
@@ -123,17 +177,8 @@ public class MainActivity extends AppCompatActivity {
             }
     });
 
-//        AWSMobileClient.getInstance().initialize(getApplicationContext(), new Callback<UserStateDetails>() {
-//                    @Override
-//                    public void onResult(UserStateDetails userStateDetails) {
-//                        Log.i("INIT", "onResult: " + userStateDetails.getUserState());
-//                    }
-//                    @Override
-//                    public void onError(Exception e) {
-//                        Log.e("INIT", "Initialization error.", e);
-//                    }
-//                });
 
+        //this allows me to implement auth in the app
         AWSMobileClient.getInstance().initialize(getApplicationContext(), new Callback<UserStateDetails>() {
                     @Override
                     public void onResult(UserStateDetails userStateDetails) {
@@ -163,21 +208,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-//        AWSMobileClient.getInstance().signOut(SignOutOptions.builder().signOutGlobally(true).build(), new Callback<Void>() {
-//            @Override
-//            public void onResult(final Void result) {
-//                Log.d(TAG, "signed-out");
-//
-//            }
-//            @Override
-//            public void onError(Exception e) {
-//                Log.e(TAG, "sign-out error", e);
-//            }
-//        });
-
 
     }
-//    //Intent activity for setting
+    //Intent activity for setting
     public void whenSettingsButtonIsPressed(View v){
         Intent settingsPage = new Intent(this, SettingsActivity.class);
         MainActivity.this.startActivity(settingsPage);
@@ -197,14 +230,17 @@ public class MainActivity extends AppCompatActivity {
             String addTaskIntentTitle = getIntent().getStringExtra("taskTitle");
             String addTaskIntentBody = getIntent().getStringExtra("taskBody");
             String addTaskIntentState = getIntent().getStringExtra("taskState");
-            runTaskMutation(addTaskIntentTitle, addTaskIntentBody, addTaskIntentState);
+            String addTaskIntentImage = getIntent().getStringExtra("taskImage");
+            runTaskMutation(addTaskIntentTitle, addTaskIntentBody, addTaskIntentState, addTaskIntentImage);
         }
     }
-    public void runTaskMutation(String title, String body, String state){
+    //this method accesses the schema
+    public void runTaskMutation(String title, String body, String state, String file ){
         CreateTaskInput createTaskInput = CreateTaskInput.builder().
                 title(title).
                 body(body).
-                state(state).build();
+                state(state).
+                image(file).build();
 
         mAWSAppSyncClient.mutate(CreateTaskMutation.builder().input(createTaskInput).build())
                 .enqueue(taskMutationCallback);//performs the callback when we want the data gets inserted
@@ -243,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
                 tasks.clear();
 
                 for(ListTasksQuery.Item item : response.data().listTasks().items()){
-                    Task addTask = new Task(item.title(), item.body(), item.state());
+                    Task addTask = new Task(item.title(), item.body(), item.state(), item.image());
                     tasks.add(addTask);
                 }
                 Handler handler = new Handler(Looper.getMainLooper()){
@@ -260,10 +296,59 @@ public class MainActivity extends AppCompatActivity {
         public void onFailure(@Nonnull ApolloException e)
         {
             Log.e(TAG, e.toString());
-            taskDatabase.taskDao().getAll();
+//            taskDatabase.taskDao().getAll();
         }
     };
+    public static PinpointManager getPinpointManager(final Context applicationContext) {
+        if (pinpointManager == null) {
+            final AWSConfiguration awsConfig = new AWSConfiguration(applicationContext);
+            AWSMobileClient.getInstance().initialize(applicationContext, awsConfig, new Callback<UserStateDetails>() {
+                @Override
+                public void onResult(UserStateDetails userStateDetails) {
+                    Log.i("INIT", userStateDetails.getUserState().toString());
+                }
 
+                @Override
+                public void onError(Exception e) {
+                    Log.e("INIT", "Initialization error.", e);
+                }
+            });
+
+            PinpointConfiguration pinpointConfig = new PinpointConfiguration(
+                    applicationContext,
+                    AWSMobileClient.getInstance(),
+                    awsConfig);
+
+            pinpointManager = new PinpointManager(pinpointConfig);
+
+            FirebaseInstanceId.getInstance().getInstanceId()
+                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                        @Override
+                        public void onComplete(@NonNull com.google.android.gms.tasks.Task<InstanceIdResult> task) {
+                            if (!task.isSuccessful()) {
+                                Log.w(TAG, "getInstanceId failed", task.getException());
+                                return;
+                            }
+                            final String token = task.getResult().getToken();
+                            Log.d(TAG, "Registering push notifications token: " + token);
+                            pinpointManager.getNotificationClient().registerDeviceToken(token);
+
+                        }
+
+//                        @Override
+//                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
+//                            if (!task.isSuccessful()) {
+//                                Log.w(TAG, "getInstanceId failed", task.getException());
+//                                return;
+//                            }
+//                            final String token = task.getResult().getToken();
+//                            Log.d(TAG, "Registering push notifications token: " + token);
+//                            pinpointManager.getNotificationClient().registerDeviceToken(token);
+//                        }
+                    });
+        }
+        return pinpointManager;
+    }
 
 }
 

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +52,7 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
         holder.mNamedView.setText(mValues.get(position).getTitle());
         holder.mBodyView.setText(mValues.get(position).getBody());
         holder.mStateView.setText(mValues.get(position).getState());
+        holder.mImageView.setText(mValues.get(position).getImage());
 
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -66,11 +68,16 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
                     intent.putExtra("mNamedView", holder.mNamedView.getText());
                     intent.putExtra("mBodyView", holder.mBodyView.getText());
                     intent.putExtra("mStateView", holder.mStateView.getText());
+                    intent.putExtra("mImageView", holder.mImageView.getText());
                     context.startActivity(intent);
                     TextView textView = (TextView) v.findViewById(taskName);
                 } else if(alltasks.equals("com.example.taskmaster.AllTakss")){
-                    String output = holder.mNamedView.getText().toString();
-                    Toast toast = Toast.makeText(context, output, Toast.LENGTH_SHORT);
+                    String title = holder.mNamedView.getText().toString();
+                    String body = holder.mBodyView.getText().toString();
+                    String state = holder.mStateView.getText().toString();
+                    String image = holder.mImageView.getText().toString();
+
+                    Toast toast = Toast.makeText(context, title, Toast.LENGTH_SHORT);
                     toast.show();
                 }
 //                Log.d("LOGTAG", "clicked : name "+textView.getText().toString() );
@@ -91,6 +98,7 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
         public final TextView mNamedView;
         public final TextView mBodyView;
         public final TextView mStateView;
+        public final TextView mImageView;
         public Task mItem;
 
         public ViewHolder(View view) {
@@ -99,6 +107,7 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
             mNamedView = (TextView) view.findViewById(taskName);
             mBodyView = (TextView) view.findViewById(R.id.body);
             mStateView = (TextView) view.findViewById(R.id.state);
+            mImageView = (TextView) view.findViewById(R.id.textViewS3);
         }
 
 

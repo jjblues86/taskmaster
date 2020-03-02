@@ -14,6 +14,13 @@
         "categories": {
             "auth": {
                 "taskmasterc2f92fcd": {}
+            },
+            "notifications": {
+                "Pinpoint": {
+                    "Name": "taskmasterAp9yQ-dev",
+                    "Id": "56bae8f0cc9d40dcaeb63828718f53a9",
+                    "Region": "us-west-2"
+                }
             }
         }
     }
