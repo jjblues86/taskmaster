@@ -36,7 +36,7 @@ public class AllTakss extends AppCompatActivity{
     private static final String TAG = "jj.main";
     private List<Task> tasks;
 
-//    TaskDatabase taskDatabase;
+    TaskDatabase taskDatabase;
 
 
     @Override
@@ -90,7 +90,7 @@ public class AllTakss extends AppCompatActivity{
                 tasks.clear();
 
                 for (ListTasksQuery.Item item : response.data().listTasks().items()) {
-                    Task addTask = new Task(item.title(), item.body(), item.state());
+                    Task addTask = new Task(item.title(), item.body(), item.state(), item.image());
                     tasks.add(addTask);
                 }
                 Handler handler = new Handler(Looper.getMainLooper()) {
@@ -107,7 +107,7 @@ public class AllTakss extends AppCompatActivity{
         @Override
         public void onFailure(@Nonnull ApolloException e) {
             Log.e(TAG, e.toString());
-//            taskDatabase.taskDao().getAll();
+            taskDatabase.taskDao().getAll();
         }
     };
 }

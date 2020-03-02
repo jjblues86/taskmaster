@@ -12,11 +12,13 @@ public class Task {
     String title;
     String body;
     String state;
+    String image;
 
-    public Task(String title, String body, String state) {
+    public Task(String title, String body, String state, String image) {
         this.title = title;
         this.body = body;
         this.state = state;
+        this.image = image;
     }
 
     public String getTitle() {
@@ -30,4 +32,9 @@ public class Task {
     public String getState() {
         return state;
     }
+
+    public String getImage() {
+        return image;
+    }
+
 }
