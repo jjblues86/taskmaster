@@ -52,6 +52,9 @@ On the “Add a Task” activity, allow users to optionally select a file to att
 - Displaying Files
 On the Task detail activity, if there is a file that is an image associated with a particular Task, that image should be displayed within that activity. (If the file is any other type, you should display a link to it.)
 
+- Adding a Task from Another Application
+Add an intent filter to your application such that a user can hit the “share” button on an image in another application, choose TaskMaster as the app to share that image with, and be taken directly to the Add a Task activity with that image pre-selected.
+
 ## To Run
 - Clone this repo
 - run gradle build
