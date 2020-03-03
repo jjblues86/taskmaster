@@ -79,6 +79,25 @@ public class AddTask extends AppCompatActivity {
                 .build();
 
 
+         imageView = findViewById(R.id.imageView);
+
+            // Get the intent that started this activity
+        Intent intent = getIntent();
+        String type = intent.getType();
+            // Figure out what to do based on the intent type
+            if (type != null && type.contains("image/")) {
+                // Handle intents with image data ...
+                uri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                if(uri != null){
+                    imageView.setVisibility(View.VISIBLE);
+                    imageView.setImageURI(uri);
+//                    imageSelected(uri);
+                }
+
+            }
+
+
+
 //        taskDatabase = Room.databaseBuilder(getApplicationContext(), TaskDatabase.class, "task_items").allowMainThreadQueries().build();
 
 
@@ -161,6 +180,13 @@ public class AddTask extends AppCompatActivity {
             }
         }
     }
+
+//    private void imageSelected(Uri uri){
+//        imageView.setImageURI(uri);
+//
+////        uploadWithTransferUtility();
+//
+//    }
 
     @Override
     protected void onResume(){
