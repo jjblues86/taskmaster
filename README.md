@@ -55,6 +55,12 @@ On the Task detail activity, if there is a file that is an image associated with
 - Adding a Task from Another Application
 Add an intent filter to your application such that a user can hit the “share” button on an image in another application, choose TaskMaster as the app to share that image with, and be taken directly to the Add a Task activity with that image pre-selected.
 
+- Location
+When the user adds a task, their location should be retrieved and included as part of the saved Task.
+
+- Displaying Location
+On the Task Detail activity, the location of a Task should be displayed if it exists.
+
 ## To Run
 - Clone this repo
 - run gradle build
